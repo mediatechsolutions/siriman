@@ -1,0 +1,671 @@
+active_types:
+- &AD
+  code: D
+  title:
+    es: Datos/Información
+- &AKEYS
+  code: K
+  title:
+    es: Claves criptográficas
+- &AS
+  code: S
+  title:
+    es: Servicio
+- &ASW
+  code: SW
+  title:
+    es: Software - Aplicaciones informáticas
+- &AHW
+  code: HW
+  title:
+    es: Hardware - Equipamiento informático
+- &ACOM
+  code: COM
+  title:
+    es: Redes de comunicaciones
+- &AMEDIA
+  code: MEDIA
+  title:
+    es: Soportes de información
+- &AAUX
+  code: AUX
+  title:
+    es: Equipamiento Auxiliar
+- &AL
+  code: L
+  title:
+    es: Instalaciones
+- &AP
+  code: P
+  title:
+    es: Personal
+
+dimension:
+- &DD
+  code: D
+  title: 
+    es: Disponibilidad
+- &DI
+  code: I
+  title:
+    es: Integridad de los datos
+- &DC
+  code: C
+  title:
+    es: Confidencialidad de la información
+- &DA
+  code: A
+  title:
+    es: Autenticidad
+- &DT
+  code: T
+  title:
+    es: Trazabilidad
+
+threat_groups:
+- code: N
+  title:
+    es: Desastres Naturales
+  threats:
+  - code: N.1
+    title:
+      es: Fuego
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.2
+    title:
+      es: Daños por agua
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.3
+    title:
+      es: Contaminación
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.4
+    title:
+      es: Siniestro mayor
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.6
+    title:
+      es: Fenómeno climático
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.7
+    title:
+      es: Fenómeno sísmico
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.8
+    title:
+      es: Fenómeno de origen volcánico
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: N.9
+    title:
+      es: Fenómeno meteorológico
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+- code: I
+  title:
+    es: De origen Industrial
+  threats:
+  - code: I.1
+    title:
+      es: Fuego
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: I.2
+    title:
+      es: Daños por agua
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: I.3
+    title:
+      es: Contaminación mecánica
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: I.4
+    title:
+      es: Contaminación electromagnética
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+  - code: I.5
+    title:
+      es: Avería de origen físico o lógico
+    active_types:
+    - *ASW
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+  - code: I.6
+    title:
+      es: Corte en el suministro eléctrico
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+  - code: I.7
+    title:
+      es: Condiciones inadecuadas de temperatura o humedad
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+  - code: I.8
+    title:
+      es: Fallo de servicios de comunicaciones
+    active_types:
+    - *ACOM
+    dimensions:
+    - *DD
+  - code: I.9
+    title:
+      es: Interrupción de otros servicios y suministros esenciales
+    active_types:
+    - *AAUX
+    dimensions:
+    - *DD
+  - code: I.10
+    title:
+      es: Degradación de los soportes de almacenamiento de la información
+    active_types:
+    - *AMEDIA
+    dimensions:
+    - *DD
+  - code: I.11
+    title:
+      es: Emanaciones electromagnéticas
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DC
+- code: E
+  title:
+    es: Errores y fallos no intencionados
+  threats:
+  - code: E.1
+    title:
+      es: Errores de los usuarios
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AMEDIA
+    dimensions:
+    - *DI
+    - *DC
+    - *DD
+  - code: E.2
+    title:
+      es: Errores del administrador
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AHW
+    - *ACOM
+    - *AMEDIA
+    dimensions:
+    - *DI
+    - *DC
+    - *DD
+  - code: E.3
+    title:
+      es: Errores de monitorización
+    active_types:
+    - *AD
+    dimensions:
+    - *DI
+  - code: E.4
+    title:
+      es: Errores de configuración
+    active_types:
+    - *AD
+    dimensions:
+    - *DI
+  - code: E.7
+    title:
+      es: Deficiencias de la organización
+    active_types:
+    - *AP
+    dimensions:
+    - *DD
+  - code: E.8
+    title:
+      es: Difusión de software dañino
+    active_types:
+    - *ASW
+    dimensions:
+    - *DI
+    - *DC
+    - *DD
+  - code: E.9
+    title:
+      es: Errores de (re-)encaminamiento
+    active_types:
+    - *AS
+    - *ASW
+    - *ACOM
+    dimensions:
+    - *DC
+  - code: E.10
+    title:
+      es: Errores de secuencia
+    active_types:
+    - *AS
+    - *ASW
+    - *ACOM
+    dimensions:
+    - *DI
+  - code: E.15
+    title:
+      es: Alteración accidental de información
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AHW
+    - *ACOM
+    - *AMEDIA
+    - *AL
+    dimensions:
+    - *DI
+  - code: E.18
+    title:
+      es: Destrucción de información
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AHW
+    - *ACOM
+    - *AMEDIA
+    - *AL
+    dimensions:
+    - *DD
+  - code: E.19
+    title:
+      es: Fugas de información
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *ACOM
+    - *AMEDIA
+    - *AL
+    - *AP
+    dimensions:
+    - *DC
+  - code: E.20
+    title:
+      es: Vulnerabilidades de los programas (software)
+    active_types:
+    - *ASW
+    dimensions:
+    - *DD
+    - *DI
+    - *DC
+  - code: E.21
+    title:
+      es: Errores de mantenimiento/actualización de programas (software)
+    active_types:
+    - *ASW
+    dimensions:
+    - *DD
+    - *DI
+  - code: E.23
+    title:
+      es: Errores de mantenimiento/actualización de equipos (hardware)
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+  - code: E.24
+    title:
+      es: Caida del sistema por agotamiento de recursos
+    active_types:
+    - *AS
+    - *AHW
+    - *ACOM
+    dimensions:
+    - *DD
+  - code: E.25
+    title:
+      es: Pérdida de equipos
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+    - *DC
+  - code: E.28
+    title:
+      es: Indisponibilidad del personal
+    active_types:
+    - *AP
+    dimensions:
+    - *DD
+- code: A
+  title: 
+    es: Ataques intencionados
+  threats:
+  - code: A.3
+    title:
+      es: Manipulación de los registros de actividad (log)
+    active_types:
+    - *AD
+    dimensions:
+    - *DI
+  - code: A.4
+    title:
+      es: Manipulación de la configuración
+    active_types:
+    - *AD
+    dimensions:
+    - *DI
+    - *DC
+    - *DA
+  - code: A.5
+    title:
+      es: Suplantación de la identidad del usuario
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *ACOM
+    dimensions:
+    - *DI
+    - *DC
+    - *DA
+  - code: A.6
+    title:
+      es: Abuso de privilegios de acceso
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AHW
+    - *ACOM
+    dimensions:
+    - *DI
+    - *DC
+    - *DD
+  - code: A.7
+    title:
+      es: Uso no previsto
+    active_types:
+    - *AS
+    - *ASW
+    - *AHW
+    - *ACOM
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DI
+    - *DC
+    - *DD
+  - code: A.8
+    title:
+      es: Difusión de software dañino
+    active_types:
+    - *ASW
+    dimensions:
+    - *DI
+    - *DC
+    - *DD
+  - code: A.9
+    title:
+      es: (Re-)encaminamiento de mensajes
+    active_types:
+    - *AS
+    - *ASW
+    - *ACOM
+    dimensions:
+    - *DC
+  - code: A.10
+    title:
+      es: Alteración de secuencia
+    active_types:
+    - *AS
+    - *ASW
+    - *ACOM
+    dimensions:
+    - *DI
+  - code: A.11
+    title:
+      es: Acceso no autorizado
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AHW
+    - *ACOM
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DI
+    - *DC
+  - code: A.12
+    title:
+      es: Análisis de tráfico
+    active_types:
+    - *ACOM
+    dimensions:
+    - *DC
+  - code: A.13
+    title:
+      es: Repudio
+    active_types:
+    - *AS
+    - *AD
+    dimensions:
+    - *DI
+    - *DT
+  - code: A.14
+    title:
+      es: Interceptación de información (escucha)
+    active_types:
+    - *ACOM
+    dimensions:
+    - *DC
+  - code: A.15
+    title:
+      es: Modificación deliberada de la información
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *ACOM
+    - *AMEDIA
+    - *AL
+    dimensions:
+    - *DI
+  - code: A.18
+    title:
+      es: Destrucción de información
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *AMEDIA
+    - *AL
+    dimensions:
+    - *DD
+  - code: A.19
+    title:
+      es: Divulgación de información
+    active_types:
+    - *AD
+    - *AKEYS
+    - *AS
+    - *ASW
+    - *ACOM
+    - *AMEDIA
+    - *AL
+    dimensions:
+    - *DC
+  - code: A.22
+    title:
+      es: Manipulación de programas
+    active_types:
+    - *ASW
+    dimensions:
+    - *DC
+    - *DI
+    - *DD
+  - code: A.23
+    title:
+      es: Manipulación de los equipos 
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DC
+    - *DD
+  - code: A.24
+    title:
+      es: Denegación de servicio
+    active_types:
+    - *AS
+    - *AHW
+    - *ACOM
+    dimensions:
+    - *DD
+  - code: A.25
+    title:
+      es: Robo
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    dimensions:
+    - *DD
+    - *DC
+  - code: A.26
+    title:
+      es: Ataque destructivo
+    active_types:
+    - *AHW
+    - *AMEDIA
+    - *AAUX
+    - *AL
+    dimensions:
+    - *DD
+  - code: A.27
+    title:
+      es: Ocupación enemiga
+    active_types:
+    - *AL
+    dimensions:
+    - *DC
+  - code: A.28
+    title:
+      es: Indisponibilidad del personal
+    active_types:
+    - *AP
+    dimensions:
+    - *DD
+  - code: A.29
+    title:
+      es: Extorsión
+    active_types:
+    - *AP
+    dimensions:
+    - *DD
+    - *DI
+    - *DC
+  - code: A.30
+    title:
+      es: Ingeniería social (picaresca)
+    active_types:
+    - *AP
+    dimensions:
+    - *DD
+    - *DI
+    - *DC
