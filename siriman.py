@@ -4,7 +4,9 @@ import argparse
 import logging
 import subprocess
 import xml.etree.ElementTree as ET
+from collections import defaultdict
 import yaml
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 
 logger = logging.getLogger()
@@ -34,25 +36,121 @@ log_exception = logger.exception
 class Constants:
     ACTION_SOURCES='sources'
     ACTION_DISCOVER='discover'
+    ACTION_REPORT='report'
     ACTIONS = (
         ACTION_SOURCES,
         ACTION_DISCOVER,
+        ACTION_REPORT,
     )
+
+
+class ReportBuilder:
+    pass
+
+
+class HTMLReportBuilder(ReportBuilder):
+    def __init__(self, templates, directory, active_groups=None):
+        self.templates = templates
+        self.directory = directory
+        self.active_groups = active_groups or []
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        self.env = Environment(
+            loader=PackageLoader('siriman', 'templates'),
+            autoescape=select_autoescape(['html'])
+        )
+        def get_threat_for_active(active, code):
+            for t in active['threats']:
+                if t['code'] == code:
+                    return t
+        def risk_to_color(risk):
+            if risk is None:
+                return "#bbb"
+            if isinstance(risk, str) and not risk.isdigit():
+                return "#bbb"
+            r = int(risk)
+            colors = ('#94FFAD', '#CEE882', '#FFE795', '#E8B086', '#FF888B')
+            #colors = ('#75FF92', '#CBE866', '#FFDF76', '#E89E69', '#FF6973')
+            #colors = ('#02FF4C', '#A3E800', '#FFC90D', '#E86200', '#FF0016')
+            return colors[int((4 * r) / 30)]
+        def active_code_to_label(code):
+            labels = dict(
+                S="Service",
+                HW="Hardware",
+                SW="Software",
+            )
+            return labels.get(code, code)
+        def get_active_filename(active_type, active_name):
+            return 
+
+        self.env.globals.update(get_threat_for_active=get_threat_for_active)
+        self.env.globals.update(risk_to_color=risk_to_color)
+        self.env.globals.update(active_code_to_label=active_code_to_label)
+        self.env.globals.update(get_active_filename=self.get_active_filename)
+
+    def get_file_for_writting_active(self, active, prepend=True):
+        filename = self.get_active_filename(active.active_type['code'], active.name)
+        if not prepend:
+            return filename
+        return os.path.join(self.directory, filename)
+
+    def get_active_filename(self, active_code, active_name):
+        return "active_%s_%s.html" % (active_code, active_name)
+
+    def write_active(self, active):
+        template = self.env.get_template('active.html')
+        filename = self.get_file_for_writting_active(active)
+        with open(filename, 'w+') as fd:
+            log_debug("Writting file %s" % filename)
+            fd.write(
+                template.render(
+                    active_groups=self.active_groups,
+                    active=active
+                )
+            )
+
+    def write_threats(self, threat_groups, actives):
+        template = self.env.get_template('threats.html')
+        filename = os.path.join(self.directory, 'threats.html')
+        with open(filename, 'w+') as fd:
+            log_debug("Writting file %s" % filename)
+            fd.write(
+                template.render(
+                    active_groups=self.active_groups,
+                    threat_groups=threat_groups,
+                    actives=actives
+                )
+            )
 
 
 class Active:
     def as_dict(self):
         return vars(self)
 
-class HostActive(Active):
-    code = 'HW'
+    @classmethod
+    def build(cls, data_dict):
+        result = cls(data_dict['name'])
+        myvars = vars(result)
+        for k, v in data_dict.items():
+            if k == 'file_version':
+                continue
+            if k not in myvars:
+                raise Exception("FIXME: %s is not a field for %s" % (k, cls))
+            setattr(result, k, v)
+        return result
 
+
+class HardwareActive(Active):
+    code = 'HW'
     def __init__(self, name, filename=None):
+        self.active_type = dict(code=self.code)
         self.name = name
+        self.related = defaultdict(list)
         self.addresses = list()
         self.hostnames = list()
         self.os = None
         self.state = None
+        self.threats = []
 
     def __str__(self):
         return "{HOST %s - %s}" % (self.name, self.state)
@@ -77,9 +175,10 @@ class HostActive(Active):
 
 class ServiceActive(Active):
     code = 'S'
-
     def __init__(self, name, filename=None):
+        self.active_type = dict(code=self.code)
         self.name = name
+        self.related = defaultdict(list)
         self.program = None
         self.product = None
         self.version = None
@@ -87,19 +186,41 @@ class ServiceActive(Active):
         self.state = None
         self.host = None
         self.address = None
+        self.threats = []
+
+class SoftwareActive(Active):
+    code = 'SW'
+    def __init__(self, name, filename=None):
+        self.active_type = dict(code=self.code)
+        self.name = name
+        self.related = defaultdict(list)
+        self.threats = []
+        self.product = None
+        self.version = None
+
+ACTIVES = (HardwareActive, SoftwareActive, ServiceActive)
+
+def active_builder(active_dict):
+    kind = active_dict.get('active_type', {}).get('code')
+    for at in ACTIVES:
+        if at.code == kind:
+            return at.build(active_dict)
+    raise Exception ("FIXME: active type not recognized")
 
 
 class YamlPersistence:
+    version = 1
+
     def __init__(self, directory):
         self.directory = directory
-        self._template_cache = None
+        self._threats_cache = None
 
     @property
     def sourcesfile(self):
         return os.path.join(self.directory, 'sources.yaml')
 
     @property
-    def templatefile(self):
+    def threatsfile(self):
         return os.path.join(os.path.dirname(__file__), 'templates', 'magerit_v3.yaml')
 
     def read(self, filename):
@@ -107,6 +228,7 @@ class YamlPersistence:
             return yaml.load(fd)
 
     def write(self, filename, data):
+        data['file_version'] = self.version
         with open(filename, 'w+') as fd:
             yaml.dump(data, fd, default_flow_style=False, encoding=('utf-8'), allow_unicode=True)
 
@@ -114,22 +236,22 @@ class YamlPersistence:
         for data in self.read(self.sourcesfile):
             yield source_builder(data, self.sourcesfile)
        
-    def load_template(self):
-        if self._template_cache == None:
-            self._template_cache = self.read(self.templatefile)
-        return self._template_cache
+    def load_threats(self):
+        if self._threats_cache == None:
+            self._threats_cache = self.read(self.threatsfile)
+        return self._threats_cache
 
     def get_active_type_for_code(self, code):
-        template = self.load_template()
-        for active in template['active_types']:
+        threats = self.load_threats()
+        for active in threats['active_types']:
             if active['code'] == code:
                 return active
         return None
 
-    def get_risks_for_active_type(self, active_type, language):
-        template = self.load_template()
+    def get_threats_for_active_type(self, active_type, language):
+        threats = self.load_threats()
         active_type = self.get_active_type_for_code(active_type)
-        for group in template['threat_groups']:
+        for group in threats['threat_groups']:
             for threat in group['threats']:
                if active_type in threat['active_types']:
                     yield dict(
@@ -144,12 +266,20 @@ class YamlPersistence:
                     )
 
     def write_active(self, active):
-        filename = os.path.join(self.directory, "%s_%s.yaml" % (active.code, active.name))
+        filename = os.path.join(self.directory, "%s_%s.yaml" % (active.active_type['code'], active.name))
         if os.path.exists(filename):
             log_debug("File %s already exists. Ignoring." % filename)
         else:
             log_debug("Writting active %s to file %s" % (active.name, filename))
             self.write(filename, active.as_dict())
+
+    def list_actives(self):
+        for filename in os.listdir(self.directory):
+            fullpath = os.path.join(self.directory, filename)
+            log_debug("Loading file %s" % fullpath)
+            if filename == 'sources.yaml':
+                continue
+            yield self.read(fullpath)
  
 class Source:
     pass
@@ -175,12 +305,12 @@ class URLSource(Source):
         log_debug("discovering")
         for address in self.addresses:
             log_info("Discover for address %s" % address)
-            ports = ','.join(address['ports']) if address.get('ports') else '1-65535'
+            ports = ','.join(str(x) for x in address['ports']) if address.get('ports') else '1-65535'
             log_debug("Scanning %s with ports %s" % (address, ports))
             data = subprocess.check_output(("nmap -sV -sT -Pn -oX - %s -p %s" % (address['address'], ports)).split())
             root = ET.fromstring(data)
             for host in root.iter('host'):
-                newhost = HostActive(self.name)
+                newhost = HardwareActive(self.name)
                 newhost.state = host.find('status').get('state')
                 for addr in host.iter("address"):
                     newhost.add_address(addr.get('addr'), addr.get('addrtype'))
@@ -195,7 +325,20 @@ class URLSource(Source):
                     service.state = port.find('state').get('state')
                     service.os = svc.get('ostype')
                     service.address = address
+
+                    software = SoftwareActive("%s_%s" % (svc.get('product'), svc.get('version')))
+                    software.product = svc.get('product')
+                    software.version = svc.get('version')
+                    
+                    service.related[newhost.code].append(newhost.name)
+                    service.related[software.code].append(service.name)
+                    software.related[newhost.code].append(newhost.name)
+                    software.related[service.code].append(service.name)
+                    newhost.related[service.code].append(service.name)
+                    newhost.related[software.code].append(software.name)
+
                     callback(service)
+                    callback(software)
                 callback(newhost)
             
 
@@ -214,7 +357,6 @@ class Siriman:
     def __init__(self, args, persistence):
         self.args = args
         self.persistence = persistence
-        self.risks = None
     
         if not os.path.exists(args.directory):
             os.makedirs(args.directory)
@@ -228,7 +370,7 @@ class Siriman:
     def discover(self):
         def save_active(active):
             log_debug("Discovered active %s" % active.name)
-            active.risks = list(self.persistence.get_risks_for_active_type(active.code, self.args.language))
+            active.threats = list(self.persistence.get_threats_for_active_type(active.active_type['code'], self.args.language))
             self.persistence.write_active(active)
             
         sources = self.persistence.load_sources()
@@ -236,24 +378,30 @@ class Siriman:
             if not self.args.sources or source in self.args.sources:
                 source.discover(save_active)
 
-    def initialize(self):
-        self.load_risks()
-
-    def load_risks(self):
-        self.risks = yaml.load(self.args.risklist)
-
-    def create_risks_file(self):
-        result = list()
-        for risk in self.risks:
-            if self.args.language not in risk['description']:
-                raise Exception("Language not supported")
-            result.append(
+    def report(self, reporter):
+        threat_groups = self.persistence.load_threats()['threat_groups']
+        actives = []
+        active_list = defaultdict(list)
+        for active_data in self.persistence.list_actives():
+            active = active_builder(active_data)
+            active_list[active.active_type['code']].append(
                 dict(
-                    code=risk['code'],
-                    description=risk['description'][self.args.language],
+                    name=active.name,
+                    filename=reporter.get_file_for_writting_active(active, False),
                 )
             )
-        self.persistence.write(self.risksfile, result)
+            actives.append(
+                dict(
+                    name=active.name,
+                    threats=active.threats,
+                )
+            )
+           
+        reporter.active_groups = active_list 
+        for active_data in self.persistence.list_actives():
+            active = active_builder(active_data)
+            reporter.write_active(active)
+        reporter.write_threats(threat_groups, actives)
 
 
 def main():
@@ -275,13 +423,18 @@ def main():
     )
     parser.add_argument(
         '-d', '--directory',
-        default="risks",
+        default="assessments",
         help='Work directory'
     )
     parser.add_argument(
         '--sources',
         nargs='*',
         help='Work directory'
+    )
+    parser.add_argument(
+        '--output',
+        default="report",
+        help='Output directory for reports'
     )
 
     parser.add_argument(
@@ -301,6 +454,9 @@ def main():
         siriman.show_sources()
     elif args.action == Constants.ACTION_DISCOVER:
         siriman.discover()
+    elif args.action == Constants.ACTION_REPORT:
+        report_builder = HTMLReportBuilder(args.templates, args.output)
+        siriman.report(report_builder)
     else:
         log_error("Action '%s' is not supported." % args.action)
 

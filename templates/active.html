@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Active {{active.name}} ({{ active.active_type.code }})</h1>
+
+<h2>Relationships</h2>
+
+<ul>
+  {% for name, items in active.related.items() %}
+  <li>{{ name }}
+    <ul>
+        {% for item in items %}
+        <li><a href="{{ get_active_filename(name, item) }}">{{ item }}</a></li>
+        {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
+
+<h2>Threats</h2>
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Probability</th>
+            <th>Impact</th>
+            <th>Risk</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for threat in active.threats %}
+        <tr>
+            <th>{{ threat.code }} </th>
+            <td>{{ threat.title }} </td>
+            <td>{{ threat.probability if threat.probability != None else 'Not set' }} </td>
+            <td>{{ threat.impact if threat.impact != None else 'Not set' }}</td>
+            {% if threat.impact != None and threat.probability != None %}
+            {%   set risk=threat.impact * threat.probability %}
+            <td style="background-color: {{ risk_to_color(risk) }}">{{ risk }}</td>
+            {% else %}
+            <td>-</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

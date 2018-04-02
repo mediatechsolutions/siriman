@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Threats</h1>
+
+{% for group in threat_groups %}
+<h3>{{ group.title.es }}</h3>
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th>Threat Code</th>
+            <th>Threat Title</th>
+            {% for active in actives %}
+            <th>{{ active.name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for threat in group.threats %}
+        <tr>
+            <th>{{ threat.code }} </th>
+            <td>{{ threat.title.es }} </td>
+            {% for active in actives %}
+            {%   set active_threat=get_threat_for_active(active, threat.code) %}
+            {%   if active_threat %}
+            {%     set probability=active_threat.probability %}
+            {%     set impact=active_threat.impact %}
+            {%     if probability != None and impact != None %}
+            {%       set risk=impact * probability %}
+            {%     else %}
+            {%       set risk=None %}
+            {%     endif %}
+            <td style="background-color: {{ risk_to_color(risk) }}">
+                <span title="Probability">{{ probability if probability != None else 'X' }}</span>
+                * 
+                <span title="Impact">{{ impact if impact != None else 'X' }}</span>
+                =
+                <b title="Risk">{{ risk if risk != None else 'X' }}</b>
+            </td>
+            {%   else %}
+            <td>
+                <span title="Does not apply.">-</span>
+            </td>
+            {%   endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+
+{% endblock %}
