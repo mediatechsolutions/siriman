@@ -146,12 +146,9 @@ class Active:
         self.filename = filename
         self.active_type = dict(code=self.code)
         self.name = name
-        self.related = defaultdict(list)
+        self.related = dict()
         self.threats = []
         self.responsible = None
-
-    def as_dict(self):
-        return vars(self)
 
     @classmethod
     def build(cls, data_dict):
@@ -165,6 +162,15 @@ class Active:
             setattr(result, k, v)
         return result
 
+    def as_dict(self):
+        return vars(self)
+
+    def add_related(self, active):
+        if active.code not in self.related:
+            self.related[active.code] = []
+        if active.name not in self.related[active.code]:
+            self.related[active.code].append(active.name)
+            active.add_related(self)
 
 class HardwareActive(Active):
     code = 'HW'
@@ -390,13 +396,11 @@ class URLSource(Source):
                     software = SoftwareActive("%s_%s" % (svc.get('product'), svc.get('version')))
                     software.product = svc.get('product')
                     software.version = svc.get('version')
-                    
-                    service.related[newhost.code].append(newhost.name)
-                    service.related[software.code].append(service.name)
-                    software.related[newhost.code].append(newhost.name)
-                    software.related[service.code].append(service.name)
-                    newhost.related[service.code].append(service.name)
-                    newhost.related[software.code].append(software.name)
+                 
+
+                    newhost.add_related(service)
+                    newhost.add_related(software) 
+                    service.add_related(software) 
 
                     callback(service)
                     callback(software)
@@ -522,7 +526,7 @@ def main():
             report_builder = HTMLReportBuilder(args.templates, args.output, persistence.load_threat_defaults())
             siriman.report(report_builder)
         else:
-            log_error("Action '%s' is not supported. Stopping" % args.action)
+            log_error("Action '%s' is not supported. Stopping" % action)
             break
 
 
