@@ -19,6 +19,9 @@
 </ul>
 
 <h2>Threats</h2>
+
+<p>* marks default values.</p>
+
 <table class="table table-striped table-sm">
     <thead>
         <tr>
@@ -31,13 +34,15 @@
     </thead>
     <tbody>
         {% for threat in active.threats %}
+        {% set probability=get_probability(active, threat) %}
+        {% set impact=get_impact(active, threat) %}
         <tr>
             <th>{{ threat.code }} </th>
             <td>{{ threat.title }} </td>
-            <td>{{ threat.probability if threat.probability != None else 'Not set' }} </td>
-            <td>{{ threat.impact if threat.impact != None else 'Not set' }}</td>
-            {% if threat.impact != None and threat.probability != None %}
-            {%   set risk=threat.impact * threat.probability %}
+            <td>{{ 'Not set' if probability == None else probability }}{{ '*' if threat.probability == None }}</td>
+            <td>{{ 'Not set' if impact == None else impact }}{{ '*' if threat.impact == None }}</td>
+            {% if impact != None and probability != None %}
+            {%   set risk=impact * probability %}
             <td style="background-color: {{ risk_to_color(risk) }}">{{ risk }}</td>
             {% else %}
             <td>-</td>

@@ -3,6 +3,7 @@ import os
 import argparse
 import logging
 import subprocess
+import csv
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 import yaml
@@ -49,9 +50,10 @@ class ReportBuilder:
 
 
 class HTMLReportBuilder(ReportBuilder):
-    def __init__(self, templates, directory, active_groups=None):
+    def __init__(self, templates, directory, defaults, active_groups=None):
         self.templates = templates
         self.directory = directory
+        self.defaults = defaults
         self.active_groups = active_groups or []
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -59,10 +61,12 @@ class HTMLReportBuilder(ReportBuilder):
             loader=PackageLoader('siriman', 'templates'),
             autoescape=select_autoescape(['html'])
         )
+
         def get_threat_for_active(active, code):
             for t in active['threats']:
                 if t['code'] == code:
                     return t
+
         def risk_to_color(risk):
             if risk is None:
                 return "#bbb"
@@ -70,9 +74,8 @@ class HTMLReportBuilder(ReportBuilder):
                 return "#bbb"
             r = int(risk)
             colors = ('#94FFAD', '#CEE882', '#FFE795', '#E8B086', '#FF888B')
-            #colors = ('#75FF92', '#CBE866', '#FFDF76', '#E89E69', '#FF6973')
-            #colors = ('#02FF4C', '#A3E800', '#FFC90D', '#E86200', '#FF0016')
             return colors[int((4 * r) / 30)]
+
         def active_code_to_label(code):
             labels = dict(
                 S="Service",
@@ -80,13 +83,27 @@ class HTMLReportBuilder(ReportBuilder):
                 SW="Software",
             )
             return labels.get(code, code)
-        def get_active_filename(active_type, active_name):
-            return 
+
+        def get_impact(active, threat):
+            impact = threat.get('impact')
+            if impact is None:
+                active_code = active.code if isinstance(active, Active) else active.get('code')
+                return (self.defaults.get(active_code, threat.get('code')) or {}).get('impact')
+            return impact
+
+        def get_probability(active, threat):
+            probability = threat.get('probability')
+            if probability is None:
+                active_code = active.code if isinstance(active, Active) else active.get('code')
+                return (self.defaults.get(active_code, threat.get('code')) or {}).get('probability')
+            return probability
 
         self.env.globals.update(get_threat_for_active=get_threat_for_active)
         self.env.globals.update(risk_to_color=risk_to_color)
         self.env.globals.update(active_code_to_label=active_code_to_label)
         self.env.globals.update(get_active_filename=self.get_active_filename)
+        self.env.globals.update(get_impact=get_impact)
+        self.env.globals.update(get_probability=get_probability)
 
     def get_file_for_writting_active(self, active, prepend=True):
         filename = self.get_active_filename(active.active_type['code'], active.name)
@@ -171,7 +188,6 @@ class HardwareActive(Active):
             } 
         )
 
-        
 
 class ServiceActive(Active):
     code = 'S'
@@ -188,6 +204,7 @@ class ServiceActive(Active):
         self.address = None
         self.threats = []
 
+
 class SoftwareActive(Active):
     code = 'SW'
     def __init__(self, name, filename=None):
@@ -198,7 +215,9 @@ class SoftwareActive(Active):
         self.product = None
         self.version = None
 
+
 ACTIVES = (HardwareActive, SoftwareActive, ServiceActive)
+
 
 def active_builder(active_dict):
     kind = active_dict.get('active_type', {}).get('code')
@@ -208,12 +227,26 @@ def active_builder(active_dict):
     raise Exception ("FIXME: active type not recognized")
 
 
+class Defaults:
+    def __init__(self):
+        self._defaults = {}
+
+    def add(self, active_type_code, threat_code, probability, impact):
+        probability = None if probability is None else int(probability)
+        impact = None if impact is None else int(impact)
+        self._defaults[(active_type_code, threat_code)] = dict(probability=probability, impact=impact)
+
+    def get(self, active_type_code, threat_code):
+        return self._defaults.get((active_type_code, threat_code))
+
+
 class YamlPersistence:
     version = 1
 
     def __init__(self, directory):
         self.directory = directory
         self._threats_cache = None
+        self._threats_defaults_cache = None
 
     @property
     def sourcesfile(self):
@@ -222,6 +255,10 @@ class YamlPersistence:
     @property
     def threatsfile(self):
         return os.path.join(os.path.dirname(__file__), 'templates', 'magerit_v3.yaml')
+
+    @property
+    def threatsdefaultsfile(self):
+        return os.path.join(os.path.dirname(__file__), 'templates', 'magerit_v3_defaults.csv')
 
     def read(self, filename):
         with open(filename) as fd:
@@ -237,9 +274,32 @@ class YamlPersistence:
             yield source_builder(data, self.sourcesfile)
        
     def load_threats(self):
-        if self._threats_cache == None:
+        if self._threats_cache is None:
             self._threats_cache = self.read(self.threatsfile)
         return self._threats_cache
+
+    def load_threat_defaults(self):
+        if self._threats_defaults_cache is None:
+            result = Defaults()
+            with open(self.threatsdefaultsfile, 'r') as csvfile:
+                data = csv.reader(csvfile, delimiter=';', quotechar='|')
+                for line in data:
+                    break  # skip first line
+                for line in data:
+                    if len(line) != 4:
+                        log_warning("Invalid default line that will be ignored: %s" % line)
+                        continue
+                    raw_type, raw_threat, probability, impact = line 
+                    type_code, _, title = raw_type.partition('|')
+                    threat_code, _, title = raw_threat.partition('|')
+
+                    result.add(type_code, threat_code, probability, impact)
+
+            self._threats_defaults_cache = result
+        return self._threats_defaults_cache
+
+    def get_defaults(self, active_type_code, threat_code):
+        return self.load_threat_defaults().get((active_type_code, threat_code))
 
     def get_active_type_for_code(self, code):
         threats = self.load_threats()
@@ -253,12 +313,14 @@ class YamlPersistence:
         active_type = self.get_active_type_for_code(active_type)
         for group in threats['threat_groups']:
             for threat in group['threats']:
-               if active_type in threat['active_types']:
+                if active_type in threat['active_types']:
                     yield dict(
                         code=threat['code'],
                         title=threat['title'][language],
                         probability=None,
-                        impact=None, 
+                        impact=None,
+                        #probability=threat.get('defaults', {}).get(active_type['code'], {}).get('probability'),
+                        #impact=threat.get('defaults', {}).get(active_type, {}).get('impact'),
                         # dimensions=[
                         #     dict(code=x['code'], title=x['title'][language])
                         #     for x in threat['dimensions']
@@ -324,7 +386,6 @@ class URLSource(Source):
                     service.version = svc.get('version')
                     service.state = port.find('state').get('state')
                     service.os = svc.get('ostype')
-                    service.address = address
 
                     software = SoftwareActive("%s_%s" % (svc.get('product'), svc.get('version')))
                     software.product = svc.get('product')
@@ -393,6 +454,7 @@ class Siriman:
             actives.append(
                 dict(
                     name=active.name,
+                    code=active.code,
                     threats=active.threats,
                 )
             )
@@ -455,7 +517,7 @@ def main():
     elif args.action == Constants.ACTION_DISCOVER:
         siriman.discover()
     elif args.action == Constants.ACTION_REPORT:
-        report_builder = HTMLReportBuilder(args.templates, args.output)
+        report_builder = HTMLReportBuilder(args.templates, args.output, persistence.load_threat_defaults())
         siriman.report(report_builder)
     else:
         log_error("Action '%s' is not supported." % args.action)

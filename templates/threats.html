@@ -24,8 +24,8 @@
             {% for active in actives %}
             {%   set active_threat=get_threat_for_active(active, threat.code) %}
             {%   if active_threat %}
-            {%     set probability=active_threat.probability %}
-            {%     set impact=active_threat.impact %}
+            {%     set probability=get_probability(active, active_threat) %}
+            {%     set impact=get_impact(active, active_threat) %}
             {%     if probability != None and impact != None %}
             {%       set risk=impact * probability %}
             {%     else %}

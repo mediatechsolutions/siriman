@@ -1,0 +1,201 @@
+ACTIVE TYPE                              ;THREAT                                                                ;PROBABILITY; IMPACT
+AUX|Equipamiento Auxiliar                ;N.1|Fuego                                                             ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.2|Daños por agua                                                    ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.3|Contaminación                                                     ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.4|Siniestro mayor                                                   ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.6|Fenómeno climático                                                ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.7|Fenómeno sísmico                                                  ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.8|Fenómeno de origen volcánico                                      ;0          ;0
+AUX|Equipamiento Auxiliar                ;N.9|Fenómeno meteorológico                                            ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.1|Fuego                                                             ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.2|Daños por agua                                                    ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.3|Contaminación mecánica                                            ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.4|Contaminación electromagnética                                    ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.5|Avería de origen físico o lógico                                  ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.6|Corte en el suministro eléctrico                                  ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.7|Condiciones inadecuadas de temperatura o humedad                  ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.9|Interrupción de otros servicios y suministros esenciales          ;0          ;0
+AUX|Equipamiento Auxiliar                ;I.11|Emanaciones electromagnéticas                                    ;0          ;0
+AUX|Equipamiento Auxiliar                ;E.23|Errores de mantenimiento/actualización de equipos (hardware)     ;0          ;0
+AUX|Equipamiento Auxiliar                ;E.25|Pérdida de equipos                                               ;0          ;0
+AUX|Equipamiento Auxiliar                ;A.7|Uso no previsto                                                   ;0          ;0
+AUX|Equipamiento Auxiliar                ;A.11|Acceso no autorizado                                             ;0          ;0
+AUX|Equipamiento Auxiliar                ;A.23|Manipulación de los equipos                                      ;0          ;0
+AUX|Equipamiento Auxiliar                ;A.25|Robo                                                             ;0          ;0
+AUX|Equipamiento Auxiliar                ;A.26|Ataque destructivo                                               ;0          ;0
+COM|Redes de comunicaciones              ;I.8|Fallo de servicios de comunicaciones                              ;0          ;0
+COM|Redes de comunicaciones              ;E.2|Errores del administrador                                         ;0          ;0
+COM|Redes de comunicaciones              ;E.10|Errores de secuencia                                             ;0          ;0
+COM|Redes de comunicaciones              ;E.15|Alteración accidental de información                             ;0          ;0
+COM|Redes de comunicaciones              ;E.18|Destrucción de información                                       ;0          ;0
+COM|Redes de comunicaciones              ;E.19|Fugas de información                                             ;0          ;0
+COM|Redes de comunicaciones              ;E.24|Caida del sistema por agotamiento de recursos                    ;0          ;0
+COM|Redes de comunicaciones              ;E.9|Errores de (re-)encaminamiento                                    ;0          ;0
+COM|Redes de comunicaciones              ;A.5|Suplantación de la identidad del usuario                          ;0          ;0
+COM|Redes de comunicaciones              ;A.6|Abuso de privilegios de acceso                                    ;0          ;0
+COM|Redes de comunicaciones              ;A.7|Uso no previsto                                                   ;0          ;0
+COM|Redes de comunicaciones              ;A.9|(Re-)encaminamiento de mensajes                                   ;0          ;0
+COM|Redes de comunicaciones              ;A.10|Alteración de secuencia                                          ;0          ;0
+COM|Redes de comunicaciones              ;A.11|Acceso no autorizado                                             ;0          ;0
+COM|Redes de comunicaciones              ;A.12|Análisis de tráfico                                              ;0          ;0
+COM|Redes de comunicaciones              ;A.14|Interceptación de información (escucha)                          ;0          ;0
+COM|Redes de comunicaciones              ;A.15|Modificación deliberada de la información                        ;0          ;0
+COM|Redes de comunicaciones              ;A.19|Divulgación de información                                       ;0          ;0
+COM|Redes de comunicaciones              ;A.24|Denegación de servicio                                           ;0          ;0
+D|Datos/Información                      ;E.1|Errores de los usuarios                                           ;0          ;0
+D|Datos/Información                      ;E.2|Errores del administrador                                         ;0          ;0
+D|Datos/Información                      ;E.3|Errores de monitorización                                         ;0          ;0
+D|Datos/Información                      ;E.4|Errores de configuración                                          ;0          ;0
+D|Datos/Información                      ;E.15|Alteración accidental de información                             ;0          ;0
+D|Datos/Información                      ;E.18|Destrucción de información                                       ;0          ;0
+D|Datos/Información                      ;E.19|Fugas de información                                             ;0          ;0
+D|Datos/Información                      ;A.3|Manipulación de los registros de actividad (log)                  ;0          ;0
+D|Datos/Información                      ;A.4|Manipulación de la configuración                                  ;0          ;0
+D|Datos/Información                      ;A.5|Suplantación de la identidad del usuario                          ;0          ;0
+D|Datos/Información                      ;A.6|Abuso de privilegios de acceso                                    ;0          ;0
+D|Datos/Información                      ;A.11|Acceso no autorizado                                             ;0          ;0
+D|Datos/Información                      ;A.13|Repudio                                                          ;0          ;0
+D|Datos/Información                      ;A.15|Modificación deliberada de la información                        ;0          ;0
+D|Datos/Información                      ;A.18|Destrucción de información                                       ;0          ;0
+D|Datos/Información                      ;A.19|Divulgación de información                                       ;0          ;0
+HW|Hardware - Equipamiento informático   ;N.1|Fuego                                                             ;0          ;9
+HW|Hardware - Equipamiento informático   ;N.2|Daños por agua                                                    ;0          ;7
+HW|Hardware - Equipamiento informático   ;N.3|Contaminación                                                     ;0          ;4
+HW|Hardware - Equipamiento informático   ;N.4|Siniestro mayor                                                   ;1          ;10
+HW|Hardware - Equipamiento informático   ;N.6|Fenómeno climático                                                ;0          ;5
+HW|Hardware - Equipamiento informático   ;N.7|Fenómeno sísmico                                                  ;1          ;5
+HW|Hardware - Equipamiento informático   ;N.8|Fenómeno de origen volcánico                                      ;0          ;10
+HW|Hardware - Equipamiento informático   ;N.9|Fenómeno meteorológico                                            ;0          ;7
+HW|Hardware - Equipamiento informático   ;I.1|Fuego                                                             ;1          ;9
+HW|Hardware - Equipamiento informático   ;I.2|Daños por agua                                                    ;1          ;7
+HW|Hardware - Equipamiento informático   ;I.3|Contaminación mecánica                                            ;0          ;4
+HW|Hardware - Equipamiento informático   ;I.4|Contaminación electromagnética                                    ;0          ;8
+HW|Hardware - Equipamiento informático   ;I.5|Avería de origen físico o lógico                                  ;0          ;10
+HW|Hardware - Equipamiento informático   ;I.6|Corte en el suministro eléctrico                                  ;0          ;10
+HW|Hardware - Equipamiento informático   ;I.7|Condiciones inadecuadas de temperatura o humedad                  ;0          ;10
+HW|Hardware - Equipamiento informático   ;I.11|Emanaciones electromagnéticas                                    ;0          ;8
+HW|Hardware - Equipamiento informático   ;E.2|Errores del administrador                                         ;2          ;8
+HW|Hardware - Equipamiento informático   ;E.15|Alteración accidental de información                             ;1          ;8
+HW|Hardware - Equipamiento informático   ;E.18|Destrucción de información                                       ;1          ;8
+HW|Hardware - Equipamiento informático   ;E.23|Errores de mantenimiento/actualización de equipos (hardware)     ;1          ;9
+HW|Hardware - Equipamiento informático   ;E.24|Caida del sistema por agotamiento de recursos                    ;1          ;7
+HW|Hardware - Equipamiento informático   ;E.25|Pérdida de equipos                                               ;0          ;8
+HW|Hardware - Equipamiento informático   ;A.6|Abuso de privilegios de acceso                                    ;1          ;7
+HW|Hardware - Equipamiento informático   ;A.7|Uso no previsto                                                   ;1          ;5
+HW|Hardware - Equipamiento informático   ;A.11|Acceso no autorizado                                             ;1          ;7
+HW|Hardware - Equipamiento informático   ;A.23|Manipulación de los equipos                                      ;1          ;6
+HW|Hardware - Equipamiento informático   ;A.24|Denegación de servicio                                           ;1          ;6
+HW|Hardware - Equipamiento informático   ;A.25|Robo                                                             ;0          ;9
+HW|Hardware - Equipamiento informático   ;A.26|Ataque destructivo                                               ;0          ;10
+K|Claves criptográficas                  ;E.1|Errores de los usuarios                                           ;0          ;0
+K|Claves criptográficas                  ;E.2|Errores del administrador                                         ;0          ;0
+K|Claves criptográficas                  ;E.15|Alteración accidental de información                             ;0          ;0
+K|Claves criptográficas                  ;E.18|Destrucción de información                                       ;0          ;0
+K|Claves criptográficas                  ;E.19|Fugas de información                                             ;0          ;0
+K|Claves criptográficas                  ;A.5|Suplantación de la identidad del usuario                          ;0          ;0
+K|Claves criptográficas                  ;A.6|Abuso de privilegios de acceso                                    ;0          ;0
+K|Claves criptográficas                  ;A.11|Acceso no autorizado                                             ;0          ;0
+K|Claves criptográficas                  ;A.15|Modificación deliberada de la información                        ;0          ;0
+K|Claves criptográficas                  ;A.18|Destrucción de información                                       ;0          ;0
+K|Claves criptográficas                  ;A.19|Divulgación de información                                       ;0          ;0
+L|Instalaciones                          ;N.1|Fuego                                                             ;0          ;0
+L|Instalaciones                          ;N.2|Daños por agua                                                    ;0          ;0
+L|Instalaciones                          ;N.3|Contaminación                                                     ;0          ;0
+L|Instalaciones                          ;N.4|Siniestro mayor                                                   ;0          ;0
+L|Instalaciones                          ;N.6|Fenómeno climático                                                ;0          ;0
+L|Instalaciones                          ;N.7|Fenómeno sísmico                                                  ;0          ;0
+L|Instalaciones                          ;N.8|Fenómeno de origen volcánico                                      ;0          ;0
+L|Instalaciones                          ;N.9|Fenómeno meteorológico                                            ;0          ;0
+L|Instalaciones                          ;I.1|Fuego                                                             ;0          ;0
+L|Instalaciones                          ;I.2|Daños por agua                                                    ;0          ;0
+L|Instalaciones                          ;I.3|Contaminación mecánica                                            ;0          ;0
+L|Instalaciones                          ;I.11|Emanaciones electromagnéticas                                    ;0          ;0
+L|Instalaciones                          ;E.15|Alteración accidental de información                             ;0          ;0
+L|Instalaciones                          ;E.18|Destrucción de información                                       ;0          ;0
+L|Instalaciones                          ;E.19|Fugas de información                                             ;0          ;0
+L|Instalaciones                          ;A.7|Uso no previsto                                                   ;0          ;0
+L|Instalaciones                          ;A.11|Acceso no autorizado                                             ;0          ;0
+L|Instalaciones                          ;A.15|Modificación deliberada de la información                        ;0          ;0
+L|Instalaciones                          ;A.18|Destrucción de información                                       ;0          ;0
+L|Instalaciones                          ;A.19|Divulgación de información                                       ;0          ;0
+L|Instalaciones                          ;A.26|Ataque destructivo                                               ;0          ;0
+L|Instalaciones                          ;A.27|Ocupación enemiga                                                ;0          ;0
+MEDIA|Soportes de información            ;N.1|Fuego                                                             ;0          ;0
+MEDIA|Soportes de información            ;N.2|Daños por agua                                                    ;0          ;0
+MEDIA|Soportes de información            ;N.3|Contaminación                                                     ;0          ;0
+MEDIA|Soportes de información            ;N.4|Siniestro mayor                                                   ;0          ;0
+MEDIA|Soportes de información            ;N.6|Fenómeno climático                                                ;0          ;0
+MEDIA|Soportes de información            ;N.7|Fenómeno sísmico                                                  ;0          ;0
+MEDIA|Soportes de información            ;N.8|Fenómeno de origen volcánico                                      ;0          ;0
+MEDIA|Soportes de información            ;N.9|Fenómeno meteorológico                                            ;0          ;0
+MEDIA|Soportes de información            ;I.1|Fuego                                                             ;0          ;0
+MEDIA|Soportes de información            ;I.2|Daños por agua                                                    ;0          ;0
+MEDIA|Soportes de información            ;I.3|Contaminación mecánica                                            ;0          ;0
+MEDIA|Soportes de información            ;I.4|Contaminación electromagnética                                    ;0          ;0
+MEDIA|Soportes de información            ;I.5|Avería de origen físico o lógico                                  ;0          ;0
+MEDIA|Soportes de información            ;I.6|Corte en el suministro eléctrico                                  ;0          ;0
+MEDIA|Soportes de información            ;I.7|Condiciones inadecuadas de temperatura o humedad                  ;0          ;0
+MEDIA|Soportes de información            ;I.10|Degradación de los soportes de almacenamiento de la información  ;0          ;0
+MEDIA|Soportes de información            ;I.11|Emanaciones electromagnéticas                                    ;0          ;0
+MEDIA|Soportes de información            ;E.1|Errores de los usuarios                                           ;0          ;0
+MEDIA|Soportes de información            ;E.2|Errores del administrador                                         ;0          ;0
+MEDIA|Soportes de información            ;E.15|Alteración accidental de información                             ;0          ;0
+MEDIA|Soportes de información            ;E.18|Destrucción de información                                       ;0          ;0
+MEDIA|Soportes de información            ;E.19|Fugas de información                                             ;0          ;0
+MEDIA|Soportes de información            ;E.23|Errores de mantenimiento/actualización de equipos (hardware)     ;0          ;0
+MEDIA|Soportes de información            ;E.25|Pérdida de equipos                                               ;0          ;0
+MEDIA|Soportes de información            ;A.7|Uso no previsto                                                   ;0          ;0
+MEDIA|Soportes de información            ;A.11|Acceso no autorizado                                             ;0          ;0
+MEDIA|Soportes de información            ;A.15|Modificación deliberada de la información                        ;0          ;0
+MEDIA|Soportes de información            ;A.18|Destrucción de información                                       ;0          ;0
+MEDIA|Soportes de información            ;A.19|Divulgación de información                                       ;0          ;0
+MEDIA|Soportes de información            ;A.23|Manipulación de los equipos                                      ;0          ;0
+MEDIA|Soportes de información            ;A.25|Robo                                                             ;0          ;0
+MEDIA|Soportes de información            ;A.26|Ataque destructivo                                               ;0          ;0
+P|Personal                               ;E.7|Deficiencias de la organización                                   ;0          ;0
+P|Personal                               ;E.19|Fugas de información                                             ;0          ;0
+P|Personal                               ;E.28|Indisponibilidad del personal                                    ;0          ;0
+P|Personal                               ;A.28|Indisponibilidad del personal                                    ;0          ;0
+P|Personal                               ;A.29|Extorsión                                                        ;0          ;0
+P|Personal                               ;A.30|Ingeniería social (picaresca)                                    ;0          ;0
+S|Servicio                               ;E.1|Errores de los usuarios                                           ;2          ;5
+S|Servicio                               ;E.2|Errores del administrador                                         ;1          ;8
+S|Servicio                               ;E.9|Errores de (re-)encaminamiento                                    ;0          ;7
+S|Servicio                               ;E.10|Errores de secuencia                                             ;0          ;5
+S|Servicio                               ;E.15|Alteración accidental de información                             ;1          ;8
+S|Servicio                               ;E.18|Destrucción de información                                       ;1          ;9
+S|Servicio                               ;E.19|Fugas de información                                             ;2          ;7
+S|Servicio                               ;E.24|Caida del sistema por agotamiento de recursos                    ;1          ;8
+S|Servicio                               ;A.5|Suplantación de la identidad del usuario                          ;2          ;7
+S|Servicio                               ;A.6|Abuso de privilegios de acceso                                    ;1          ;7
+S|Servicio                               ;A.7|Uso no previsto                                                   ;1          ;7
+S|Servicio                               ;A.9|(Re-)encaminamiento de mensajes                                   ;0          ;5
+S|Servicio                               ;A.10|Alteración de secuencia                                          ;0          ;5
+S|Servicio                               ;A.11|Acceso no autorizado                                             ;1          ;9
+S|Servicio                               ;A.13|Repudio                                                          ;1          ;9
+S|Servicio                               ;A.15|Modificación deliberada de la información                        ;1          ;9
+S|Servicio                               ;A.18|Destrucción de información                                       ;1          ;9
+S|Servicio                               ;A.19|Divulgación de información                                       ;1          ;8
+S|Servicio                               ;A.24|Denegación de servicio                                           ;1          ;7
+SW|Software - Aplicaciones informáticas  ;I.5|Avería de origen físico o lógico                                  ;0          ;7
+SW|Software - Aplicaciones informáticas  ;E.1|Errores de los usuarios                                           ;1          ;3
+SW|Software - Aplicaciones informáticas  ;E.2|Errores del administrador                                         ;1          ;7
+SW|Software - Aplicaciones informáticas  ;E.8|Difusión de software dañino                                       ;1          ;8
+SW|Software - Aplicaciones informáticas  ;E.9|Errores de (re-)encaminamiento                                    ;0          ;2
+SW|Software - Aplicaciones informáticas  ;E.10|Errores de secuencia                                             ;0          ;2
+SW|Software - Aplicaciones informáticas  ;E.15|Alteración accidental de información                             ;1          ;5
+SW|Software - Aplicaciones informáticas  ;E.18|Destrucción de información                                       ;1          ;7
+SW|Software - Aplicaciones informáticas  ;E.19|Fugas de información                                             ;1          ;6
+SW|Software - Aplicaciones informáticas  ;E.20|Vulnerabilidades de los programas (software)                     ;1          ;9
+SW|Software - Aplicaciones informáticas  ;E.21|Errores de mantenimiento/actualización de programas (software)   ;1          ;9
+SW|Software - Aplicaciones informáticas  ;A.5|Suplantación de la identidad del usuario                          ;1          ;8
+SW|Software - Aplicaciones informáticas  ;A.6|Abuso de privilegios de acceso                                    ;1          ;7
+SW|Software - Aplicaciones informáticas  ;A.7|Uso no previsto                                                   ;0          ;5
+SW|Software - Aplicaciones informáticas  ;A.8|Difusión de software dañino                                       ;1          ;8
+SW|Software - Aplicaciones informáticas  ;A.9|(Re-)encaminamiento de mensajes                                   ;0          ;3
+SW|Software - Aplicaciones informáticas  ;A.10|Alteración de secuencia                                          ;0          ;3
+SW|Software - Aplicaciones informáticas  ;A.11|Acceso no autorizado                                             ;1          ;6
+SW|Software - Aplicaciones informáticas  ;A.15|Modificación deliberada de la información                        ;1          ;8
+SW|Software - Aplicaciones informáticas  ;A.18|Destrucción de información                                       ;1          ;8
+SW|Software - Aplicaciones informáticas  ;A.19|Divulgación de información                                       ;1          ;8
+SW|Software - Aplicaciones informáticas  ;A.22|Manipulación de programas                                        ;1          ;8
