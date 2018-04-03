@@ -141,6 +141,15 @@ class HTMLReportBuilder(ReportBuilder):
 
 
 class Active:
+    def __init__(self, name, filename=None):
+        self.name = name
+        self.filename = filename
+        self.active_type = dict(code=self.code)
+        self.name = name
+        self.related = defaultdict(list)
+        self.threats = []
+        self.responsible = None
+
     def as_dict(self):
         return vars(self)
 
@@ -160,14 +169,11 @@ class Active:
 class HardwareActive(Active):
     code = 'HW'
     def __init__(self, name, filename=None):
-        self.active_type = dict(code=self.code)
-        self.name = name
-        self.related = defaultdict(list)
+        super(HardwareActive, self).__init__(name, filename)
         self.addresses = list()
         self.hostnames = list()
         self.os = None
         self.state = None
-        self.threats = []
 
     def __str__(self):
         return "{HOST %s - %s}" % (self.name, self.state)
@@ -192,9 +198,7 @@ class HardwareActive(Active):
 class ServiceActive(Active):
     code = 'S'
     def __init__(self, name, filename=None):
-        self.active_type = dict(code=self.code)
-        self.name = name
-        self.related = defaultdict(list)
+        super(ServiceActive, self).__init__(name, filename)
         self.program = None
         self.product = None
         self.version = None
@@ -202,16 +206,12 @@ class ServiceActive(Active):
         self.state = None
         self.host = None
         self.address = None
-        self.threats = []
 
 
 class SoftwareActive(Active):
     code = 'SW'
     def __init__(self, name, filename=None):
-        self.active_type = dict(code=self.code)
-        self.name = name
-        self.related = defaultdict(list)
-        self.threats = []
+        super(SoftwareActive, self).__init__(name, filename)
         self.product = None
         self.version = None
 
@@ -471,6 +471,7 @@ def main():
     parser.add_argument(
         'action',
         choices=Constants.ACTIONS,
+        nargs='*',
         help="Action to be performed"
     )
     parser.add_argument(
@@ -512,15 +513,17 @@ def main():
 
     persistence = YamlPersistence(args.directory)
     siriman = Siriman(args, persistence)
-    if args.action == Constants.ACTION_SOURCES:
-        siriman.show_sources()
-    elif args.action == Constants.ACTION_DISCOVER:
-        siriman.discover()
-    elif args.action == Constants.ACTION_REPORT:
-        report_builder = HTMLReportBuilder(args.templates, args.output, persistence.load_threat_defaults())
-        siriman.report(report_builder)
-    else:
-        log_error("Action '%s' is not supported." % args.action)
+    for action in args.action:
+        if action == Constants.ACTION_SOURCES:
+            siriman.show_sources()
+        elif action == Constants.ACTION_DISCOVER:
+            siriman.discover()
+        elif action == Constants.ACTION_REPORT:
+            report_builder = HTMLReportBuilder(args.templates, args.output, persistence.load_threat_defaults())
+            siriman.report(report_builder)
+        else:
+            log_error("Action '%s' is not supported. Stopping" % args.action)
+            break
 
 
 if __name__ == '__main__':

@@ -4,6 +4,12 @@
 
 <h1>Active {{active.name}} ({{ active.active_type.code }})</h1>
 
+<dl class="row">
+    <dt>Responsible:</dt>
+    <dd>{{ "Not set" if active.responsible == None else active.responsible }}</dd>
+</dl>
+
+
 <h2>Relationships</h2>
 
 <ul>
