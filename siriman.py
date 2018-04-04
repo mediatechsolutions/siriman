@@ -81,6 +81,7 @@ class HTMLReportBuilder(ReportBuilder):
                 S="Service",
                 HW="Hardware",
                 SW="Software",
+                K="Key",
             )
             return labels.get(code, code)
 
@@ -221,8 +222,18 @@ class SoftwareActive(Active):
         self.product = None
         self.version = None
 
+class KeyActive(Active):
+    code = "K"
+    def __init__(self, name, filename=None):
+        super(KeyActive, self).__init__(name, filename)
+        self.md5 = None
+        self.sha1 = None
+        self.algorithm = None
+        self.valid_from = None
+        self.valid_to = None
+        self.issuer = None
 
-ACTIVES = (HardwareActive, SoftwareActive, ServiceActive)
+ACTIVES = (HardwareActive, SoftwareActive, ServiceActive, KeyActive)
 
 
 def active_builder(active_dict):
@@ -343,10 +354,10 @@ class YamlPersistence:
 
     def list_actives(self):
         for filename in os.listdir(self.directory):
+            if filename == 'sources.yaml' or filename.startswith('.'):
+                continue
             fullpath = os.path.join(self.directory, filename)
             log_debug("Loading file %s" % fullpath)
-            if filename == 'sources.yaml':
-                continue
             yield self.read(fullpath)
  
 class Source:
@@ -375,7 +386,9 @@ class URLSource(Source):
             log_info("Discover for address %s" % address)
             ports = ','.join(str(x) for x in address['ports']) if address.get('ports') else '1-65535'
             log_debug("Scanning %s with ports %s" % (address, ports))
-            data = subprocess.check_output(("nmap -sV -sT -Pn -oX - %s -p %s" % (address['address'], ports)).split())
+            data = subprocess.check_output(("nmap -sV -sT -sC -Pn -oX - %s -p %s" % (address['address'], ports)).split())
+            with open("salida_%s.xml" % address['address'], 'wb+') as fd:
+                fd.write(data)
             root = ET.fromstring(data)
             for host in root.iter('host'):
                 newhost = HardwareActive(self.name)
@@ -389,21 +402,38 @@ class URLSource(Source):
                     svc = port.find('service')
                     service.program = svc.get('name')
                     service.product = svc.get('product')
-                    service.version = svc.get('version')
+                    service.version = svc.get('version', 'unknown')
                     service.state = port.find('state').get('state')
                     service.os = svc.get('ostype')
 
-                    software = SoftwareActive("%s_%s" % (svc.get('product'), svc.get('version')))
-                    software.product = svc.get('product')
-                    software.version = svc.get('version')
-                 
+                    if svc.get('product') is not None:
+                        software = SoftwareActive("%s_%s" % (svc.get('product'), svc.get('version')))
+                        software.product = svc.get('product')
+                        software.version = svc.get('version')
+                
+                        software.add_related(newhost)
+                        software.add_related(service)
+                    
+                        callback(software)
+
+                    for script in port.findall('script'):
+                        if script.get('id') == 'ssl-cert':
+                            key = KeyActive(script.find("table[@key='subject']/elem[@key='commonName']").text.strip())
+                            key.issuer = script.find("table[@key='issuer']/elem[@key='commonName']").text.strip()
+                            key.algorithm = script.find("elem[@key='sig_algo']").text.strip()
+                            key.md5 = script.find("elem[@key='md5']").text.strip()
+                            key.sha1 = script.find("elem[@key='sha1']").text.strip()
+                            key.valid_from = script.find("table[@key='validity']/elem[@key='notBefore']").text.strip()
+                            key.valid_to = script.find("table[@key='validity']/elem[@key='notAfter']").text.strip()
+
+                            key.add_related(newhost)
+                            key.add_related(service)
+
+                            callback(key)
 
                     newhost.add_related(service)
-                    newhost.add_related(software) 
-                    service.add_related(software) 
 
                     callback(service)
-                    callback(software)
                 callback(newhost)
             
 

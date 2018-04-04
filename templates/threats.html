@@ -4,6 +4,22 @@
 
 <h1>Threats</h1>
 
+<h3>Filters</h3>
+
+<div class="row jumbotron">
+    <div class="col-12" style="margin-bottom:10px">
+        <div class="btn-group" role="group" aria-label="Controls">
+            <button class="btn btn-primary" onclick="$('.btn[aria-pressed=false]').click()">Select All</button>
+            <button class="btn btn-primary" onclick="$('.btn[aria-pressed=true]').click()">Select None</button>
+        </div>
+    </div>
+   {% for active in actives %}
+   <div class="col-4">
+     <button class="btn btn-block btn-light active" data-toggle="button" aria-pressed="true" onclick="toggle_state('.active-{{ active.name.replace('.', '-').replace(' ', '-') }}')">{{ active.name }} ({{ active.code }})</button>
+   </div>
+   {% endfor %}
+</div>
+
 {% for group in threat_groups %}
 <h3>{{ group.title.es }}</h3>
 <table class="table table-striped table-sm">
@@ -12,7 +28,7 @@
             <th>Threat Code</th>
             <th>Threat Title</th>
             {% for active in actives %}
-            <th>{{ active.name }}</th>
+            <th class="active-{{active.name.replace('.', '-').replace(' ', '-') }}">{{ active.name }}</th>
             {% endfor %}
         </tr>
     </thead>
@@ -31,7 +47,7 @@
             {%     else %}
             {%       set risk=None %}
             {%     endif %}
-            <td style="background-color: {{ risk_to_color(risk) }}">
+            <td style="background-color: {{ risk_to_color(risk) }}" class="active active-{{active.name.replace('.', '-').replace(' ', '-') }}">
                 <span title="Probability">{{ probability if probability != None else 'X' }}</span>
                 * 
                 <span title="Impact">{{ impact if impact != None else 'X' }}</span>
@@ -39,7 +55,7 @@
                 <b title="Risk">{{ risk if risk != None else 'X' }}</b>
             </td>
             {%   else %}
-            <td>
+            <td class="active active-{{ active.name.replace('.', '-').replace(' ', '-') }}">
                 <span title="Does not apply.">-</span>
             </td>
             {%   endif %}
@@ -48,6 +64,13 @@
         {% endfor %}
     </tbody>
 </table>
+
+
+<script>
+function toggle_state(selector) {
+    $(selector).toggle();
+}
+</script>
 {% endfor %}
 
 {% endblock %}

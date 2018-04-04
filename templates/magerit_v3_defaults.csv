@@ -87,17 +87,17 @@ HW|Hardware - Equipamiento informático   ;A.23|Manipulación de los equipos    
 HW|Hardware - Equipamiento informático   ;A.24|Denegación de servicio                                           ;1          ;6
 HW|Hardware - Equipamiento informático   ;A.25|Robo                                                             ;0          ;9
 HW|Hardware - Equipamiento informático   ;A.26|Ataque destructivo                                               ;0          ;10
-K|Claves criptográficas                  ;E.1|Errores de los usuarios                                           ;0          ;0
-K|Claves criptográficas                  ;E.2|Errores del administrador                                         ;0          ;0
-K|Claves criptográficas                  ;E.15|Alteración accidental de información                             ;0          ;0
-K|Claves criptográficas                  ;E.18|Destrucción de información                                       ;0          ;0
-K|Claves criptográficas                  ;E.19|Fugas de información                                             ;0          ;0
-K|Claves criptográficas                  ;A.5|Suplantación de la identidad del usuario                          ;0          ;0
-K|Claves criptográficas                  ;A.6|Abuso de privilegios de acceso                                    ;0          ;0
-K|Claves criptográficas                  ;A.11|Acceso no autorizado                                             ;0          ;0
-K|Claves criptográficas                  ;A.15|Modificación deliberada de la información                        ;0          ;0
-K|Claves criptográficas                  ;A.18|Destrucción de información                                       ;0          ;0
-K|Claves criptográficas                  ;A.19|Divulgación de información                                       ;0          ;0
+K|Claves criptográficas                  ;E.1|Errores de los usuarios                                           ;0          ;1
+K|Claves criptográficas                  ;E.2|Errores del administrador                                         ;1          ;9
+K|Claves criptográficas                  ;E.15|Alteración accidental de información                             ;1          ;7
+K|Claves criptográficas                  ;E.18|Destrucción de información                                       ;1          ;9
+K|Claves criptográficas                  ;E.19|Fugas de información                                             ;0          ;1
+K|Claves criptográficas                  ;A.5|Suplantación de la identidad del usuario                          ;1          ;10
+K|Claves criptográficas                  ;A.6|Abuso de privilegios de acceso                                    ;0          ;1
+K|Claves criptográficas                  ;A.11|Acceso no autorizado                                             ;0          ;1
+K|Claves criptográficas                  ;A.15|Modificación deliberada de la información                        ;0          ;10
+K|Claves criptográficas                  ;A.18|Destrucción de información                                       ;0          ;9
+K|Claves criptográficas                  ;A.19|Divulgación de información                                       ;1          ;10
 L|Instalaciones                          ;N.1|Fuego                                                             ;0          ;0
 L|Instalaciones                          ;N.2|Daños por agua                                                    ;0          ;0
 L|Instalaciones                          ;N.3|Contaminación                                                     ;0          ;0
