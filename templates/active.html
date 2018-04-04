@@ -4,25 +4,34 @@
 
 <h1>Active {{active.name}} ({{ active.active_type.code }})</h1>
 
-<dl class="row">
-    <dt>Responsible:</dt>
-    <dd>{{ "Not set" if active.responsible == None else active.responsible }}</dd>
-</dl>
+<div  class="jumbotron">
+  <dl class="row">
+    <dt class="col-2">Responsible:</dt>
+    <dd class="col-10">{{ "Not set" if active.responsible == None else active.responsible }}</dd>
+    {% for field in active.fields %}
+    <dt class="col-2">{{ field.replace("_", " ").capitalize() }}:</dt>
+    <dd class="col-10">
+        {{ active[field] }}
+    </dd>
+    {% endfor %}
+  </dl>
+
+  <h2>Relationships</h2>
+  
+  <ul>
+    {% for name, items in active.related.items() %}
+    <li>{{ name }}
+      <ul>
+          {% for item in items %}
+          <li><a href="{{ get_active_filename(name, item) }}">{{ item }}</a></li>
+          {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 
 
-<h2>Relationships</h2>
-
-<ul>
-  {% for name, items in active.related.items() %}
-  <li>{{ name }}
-    <ul>
-        {% for item in items %}
-        <li><a href="{{ get_active_filename(name, item) }}">{{ item }}</a></li>
-        {% endfor %}
-    </ul>
-  </li>
-  {% endfor %}
-</ul>
 
 <h2>Threats</h2>
 

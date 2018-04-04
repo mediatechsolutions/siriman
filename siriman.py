@@ -150,6 +150,7 @@ class Active:
         self.related = dict()
         self.threats = []
         self.responsible = None
+        self.fields = []
 
     @classmethod
     def build(cls, data_dict):
@@ -181,6 +182,8 @@ class HardwareActive(Active):
         self.hostnames = list()
         self.os = None
         self.state = None
+
+        self.fields = ['state', 'os']
 
     def __str__(self):
         return "{HOST %s - %s}" % (self.name, self.state)
@@ -214,6 +217,8 @@ class ServiceActive(Active):
         self.host = None
         self.address = None
 
+        self.fields = ['state', 'os', 'program', 'product', 'version']
+
 
 class SoftwareActive(Active):
     code = 'SW'
@@ -221,6 +226,9 @@ class SoftwareActive(Active):
         super(SoftwareActive, self).__init__(name, filename)
         self.product = None
         self.version = None
+
+        self.fields = ['product', 'version']
+
 
 class KeyActive(Active):
     code = "K"
@@ -232,6 +240,9 @@ class KeyActive(Active):
         self.valid_from = None
         self.valid_to = None
         self.issuer = None
+
+        self.fields = ['issuer', 'valid_from', 'valid_to']
+
 
 ACTIVES = (HardwareActive, SoftwareActive, ServiceActive, KeyActive)
 
