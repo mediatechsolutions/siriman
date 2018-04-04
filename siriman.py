@@ -113,7 +113,7 @@ class HTMLReportBuilder(ReportBuilder):
         return os.path.join(self.directory, filename)
 
     def get_active_filename(self, active_code, active_name):
-        return "active_%s_%s.html" % (active_code, active_name)
+        return ("active_%s_%s.html" % (active_code, active_name)).replace('/', '_')
 
     def write_active(self, active):
         template = self.env.get_template('active.html')
